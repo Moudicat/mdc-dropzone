@@ -4,11 +4,6 @@
         <dropzone>
             点击或拖拽到此处上传图片
         </dropzone>
-        <ul>
-            <li>1</li>
-            <li>2</li>
-            <li>3</li>
-        </ul>
     </div>
 </template>
 
