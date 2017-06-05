@@ -1,12 +1,11 @@
 <template>
-    <div
-            class="dropzone-wrapper clearfix"
-            ref="dropzone"
-            @click="handleWrapperClick"
-            @dragover.prevent
-            @dragenter="handleDragEnter"
-            @dragleave="handleDragLeave"
-            @drop.prevent="handleDrop">
+    <div class="dropzone-wrapper clearfix"
+         ref="dropzone"
+         @click="handleWrapperClick"
+         @dragover.prevent
+         @dragenter="handleDragEnter"
+         @dragleave="handleDragLeave"
+         @drop.prevent="handleDrop">
         <slot v-if="!uploadList.length"></slot>
         <ul class="preview-list" @click.stop v-else>
             <li class="preview-wrapper" v-for="(item, index) in previewList">
@@ -14,17 +13,22 @@
                     <img :src="item.data">
                     <figcaption>
                         <h5>{{ uploadList[index].name }}</h5>
-                        <a class="close" @click="handleRemove(index)">移除</a>
+                        <a class="close" @click="handleRemove(index)">移除({{ fileSize(uploadList[index].size) }})</a>
                     </figcaption>
                 </figure>
             </li>
         </ul>
         <input type="file" name="file" ref="fileInput" multiple="multiple" style="display: none;"
                @change="handleChange">
+        <div class="btn-group">
+            <input type="button" value="上传" @click.stop="handleUpload" v-if="uploadList.length">
+        </div>
     </div>
 </template>
 
 <script type="text/ecmascript-6">
+  const FILE_SIZE_LIMIT = 1024 * 1024 * 5; // 5MB
+
   export default {
     data() {
       return {
@@ -46,10 +50,14 @@
       },
       handleChange(ev) {
         for (let file of ev.target.files) {
-          this.uploadList.push(file);
-          this.fileReader(file, (data => {
-            this.previewList.push({data});
-          }));
+          if (file.size > FILE_SIZE_LIMIT) {
+            alert(`文件${file.name},超出大小限制！`);
+          } else {
+            this.uploadList.push(file);
+            this.fileReader(file, (data => {
+              this.previewList.push({data});
+            }));
+          }
         }
       },
       handleRemove(index) {
@@ -59,20 +67,33 @@
       handleDrop(ev) {
         for (let file of ev.dataTransfer.files) {
           if (this.uploadList.some(e => e.name === file.name)) return;
-          this.uploadList.push(file);
-          this.fileReader(file, (data => {
-            this.previewList.push({data});
-          }));
+          if (file.size > FILE_SIZE_LIMIT) {
+            alert(`文件${file.name},超出大小限制！`);
+          } else {
+            this.uploadList.push(file);
+            this.fileReader(file, (data => {
+              this.previewList.push({data});
+            }));
+          }
         }
+      },
+      handleUpload() {
+        console.log(this.uploadList);
       },
       handleDragEnter(ev) {
         this.$emit('dragenter');
       },
       handleDragLeave(ev) {
         this.$emit('dragleave');
+      },
+      fileSize(size) {
+        if (size / 1024 / 1024 < 1) {
+          return (size / 1024).toFixed(2) + 'KB';
+        } else {
+          return (size / 1024 / 1024).toFixed(2) + 'MB';
+        }
       }
     },
-
     mounted() {
       document.addEventListener('drop', (ev) => {
         ev.preventDefault();
@@ -85,6 +106,7 @@
     @import url('./css/reset.css');
 
     .dropzone-wrapper {
+        position: relative;
         width: 100%;
         padding: 40px 30px;
         border: 4px dashed #cbb3c2;
@@ -123,6 +145,9 @@
                     opacity: 0;
                     transition: transform .4s, opacity .3s;
                     h5 {
+                        white-space: nowrap;
+                        text-overflow: ellipsis;
+                        overflow: hidden;
                         text-align: left;
                     }
                     .close {
@@ -147,6 +172,22 @@
                         transform: translateY(-100%);
                         opacity: 1;
                     }
+                }
+            }
+        }
+        .btn-group {
+            position: absolute;
+            left: 50%;
+            bottom: 0;
+            transform: translateX(-30px);
+            input {
+                font-size: 18px;
+                width: 60px;
+                border: 1px solid gray;
+                &:hover {
+                    border-color: #fff;
+                    background-color: gray;
+                    color: #fff;
                 }
             }
         }
