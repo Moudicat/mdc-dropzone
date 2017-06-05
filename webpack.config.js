@@ -63,7 +63,9 @@ if (process.env.NODE_ENV === 'production') {
   module.exports.output = {
     path: path.resolve(__dirname, './dist'),
     publicPath: '/dist/',
-    filename: 'mdc-dropzone.js'
+    filename: 'mdc-dropzone.js',
+    library: ['droply'],
+    libraryTarget: 'umd'
   };
   module.exports.devtool = '#source-map';
   // http://vue-loader.vuejs.org/en/workflow/production.html

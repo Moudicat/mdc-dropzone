@@ -30,7 +30,6 @@
 </template>
 
 <script type="text/ecmascript-6">
-  const FILE_SIZE_LIMIT = 1024 * 1024 * 5; // 5MB
   const FILE_PREVIEW = 'data:image/jpeg;base64,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';
 
   export default {
@@ -38,6 +37,10 @@
       url: {
         type: String,
         required: true
+      },
+      limitInMB: {
+        type: Number,
+        default: 5
       }
     },
 
@@ -45,7 +48,8 @@
       return {
         uploadList: [],
         previewList: [],
-        allUpload: false
+        allUpload: false,
+        FILE_SIZE_LIMIT: 1024 * 1024 * this.limitInMB // 5MB
       };
     },
 
@@ -63,7 +67,7 @@
       handleChange(ev) {
         for (let file of ev.target.files) {
           console.log(file);
-          if (file.size > FILE_SIZE_LIMIT) {
+          if (file.size > this.FILE_SIZE_LIMIT) {
             alert(`文件${file.name},超出大小限制！`);
           } else if (file.type.indexOf('image') === -1) {
             this.previewList.push({data: FILE_PREVIEW, isUploaded: false});
@@ -84,7 +88,7 @@
       handleDrop(ev) {
         for (let file of ev.dataTransfer.files) {
           if (this.uploadList.some(e => e.name === file.name)) return;
-          if (file.size > FILE_SIZE_LIMIT) {
+          if (file.size > this.FILE_SIZE_LIMIT) {
             alert(`文件${file.name},超出大小限制！`);
           } else if (file.type.indexOf('image') === -1) {
             this.previewList.push({data: FILE_PREVIEW, isUploaded: false});
@@ -115,11 +119,10 @@
           xhr.onload = () => {
             if (xhr.status >= 200 && xhr.status < 207) {
               this.previewList[success].isUploaded = true;
-              success++;
-              this.$emit('onProgress', success / count, e);
+              this.$emit('onProgress', success++ / count, e);
               if (success === count) {
                 this.allUpload = true;
-                this.$emit('onSuccess');
+                this.$emit('onSuccess', JSON.parse(xhr.response));
               }
             } else {
               this.$emit('onError', xhr);

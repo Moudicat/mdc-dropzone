@@ -1,4 +1,11 @@
-# mdc-vue-dropzone
+# mdc-dropzone
 A vue based dropzone component.
 
-## still working on it!!
+## How to use
+
+```
+    yarn install mdc-dropzone
+```
+
+
+## Still working on it!

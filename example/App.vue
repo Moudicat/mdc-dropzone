@@ -1,14 +1,15 @@
 <template>
     <div id="app">
-        <h1>mdc-vue-dropzone  example</h1>
-        <dropzone url="http://localhost:2777/api/upload" @onProgress="handleProgress">
+        <h1>mdc-dropzone  example</h1>
+        <dropzone url="http://localhost:2777/api/upload" @onProgress="handleProgress" :limitInMB="16" @onSuccess="handleSuccess">
             点击或拖拽到此处上传图片
         </dropzone>
     </div>
 </template>
 
 <script>
-  import dropzone from '../src/index.vue';
+//  import dropzone from '../src/index.vue';
+  import dropzone from 'mdc-dropzone';
   export default {
     name: 'app',
     data () {
@@ -18,7 +19,11 @@
     },
     methods: {
       handleProgress(progress, fileData) {
-        console.log(progress, fileData);
+        console.log(progress, fileData.name);
+      },
+      handleSuccess(response) {
+        console.log(response);
+        alert('上传完成');
       }
     },
     components: {
