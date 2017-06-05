@@ -1,7 +1,7 @@
 <template>
     <div id="app">
         <h1>mdc-vue-dropzone  example</h1>
-        <dropzone>
+        <dropzone url="http://localhost:2777/api/upload" @onProgress="handleProgress">
             点击或拖拽到此处上传图片
         </dropzone>
     </div>
@@ -15,6 +15,11 @@
       return {
         msg: 'Welcome to Your Vue.js App'
       };
+    },
+    methods: {
+      handleProgress(progress, fileData) {
+        console.log(progress, fileData);
+      }
     },
     components: {
       dropzone
