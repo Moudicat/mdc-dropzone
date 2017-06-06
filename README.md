@@ -30,7 +30,7 @@ components: { Dropzone }
 
 ### event
 | name            |   desc       | params
-|:---------:|:-----------:|
+|:---------:|:-----------:|:---------------:|
 | onSuccess   |   All file uploaded. |  xhr.response
 | onError       |   upload error.       |  xhr
 | onProgress  |  upload Progress.  |  progress, current file
