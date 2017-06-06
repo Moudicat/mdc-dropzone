@@ -7,6 +7,10 @@
 
 A vue based dropzone component.
 
+
+[![intro](https://raw.githubusercontent.com/moudicat/mdc-dropzone/master/gifs/intro.gif)](https://raw.githubusercontent.com/moudicat/mdc-dropzone/master/gifs/intro.gif)
+
+
 ## How to use
 
 ```
@@ -27,7 +31,7 @@ components: { dropzone }
 <dropzone url="https://xxx.com/upload"></dropzone>
 ```
 
-## Usage
+## Options
 ### props
 | name        | type       |  default            |  desc                              |
 |:-----------:|:----------:|:-------------------:|:----------------------------------:|
