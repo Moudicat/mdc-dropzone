@@ -1,4 +1,5 @@
 # mdc-dropzone
+[![GitHub license](https://img.shields.io/badge/license-MIT-blue.svg)](https://raw.githubusercontent.com/moudicat/mdc-dropzone/master/LICENSE)
 A vue based dropzone component.
 
 ## How to use
