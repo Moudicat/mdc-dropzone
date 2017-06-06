@@ -1,8 +1,14 @@
 <template>
     <div id="app">
         <h1>mdc-dropzone  example</h1>
-        <dropzone url="http://localhost:2777/api/upload" @onProgress="handleProgress" :limitInMB="16" @onSuccess="handleSuccess">
-            点击或拖拽到此处上传图片
+        <dropzone
+                url="http://localhost:2777/api/upload"
+                :limitInMB="16"
+                :limitFiles="5"
+                :headers="{'X-MDC-Token': 'test 1010100010101'}"
+                @onProgress="handleProgress"
+                @onSuccess="handleSuccess">
+            点击或拖拽到此处上传
         </dropzone>
     </div>
 </template>
@@ -12,18 +18,12 @@
   import dropzone from 'mdc-dropzone';
   export default {
     name: 'app',
-    data () {
-      return {
-        msg: 'Welcome to Your Vue.js App'
-      };
-    },
     methods: {
       handleProgress(progress, fileData) {
         console.log(progress, fileData.name);
       },
       handleSuccess(response) {
         console.log(response);
-        alert('上传完成');
       }
     },
     components: {

@@ -41,6 +41,20 @@
       limitInMB: {
         type: Number,
         default: 5
+      },
+      limitFiles: {
+        type: Number,
+        default: 10
+      },
+      method: {
+        type: String,
+        default: 'post'
+      },
+      headers: {
+        type: Object,
+        default: function () {
+          return {};
+        }
       }
     },
 
@@ -66,7 +80,6 @@
       },
       handleChange(ev) {
         for (let file of ev.target.files) {
-          console.log(file);
           if (file.size > this.FILE_SIZE_LIMIT) {
             alert(`文件${file.name},超出大小限制！`);
           } else if (file.type.indexOf('image') === -1) {
@@ -74,18 +87,22 @@
             this.uploadList.push(file);
           } else {
             this.fileReader(file, (data => {
+              if (this.uploadList.length >= this.limitFiles) {
+                alert(`当前最多只能上传${this.limitFiles}个文件`);
+                return;
+              }
               this.previewList.push({data, isUploaded: false});
               this.uploadList.push(file);
             }));
           }
         }
-        console.log(this.previewList);
       },
       handleRemove(index) {
         this.uploadList.splice(index, 1);
         this.previewList.splice(index, 1);
       },
       handleDrop(ev) {
+        this.$emit('onDrop', ev);
         for (let file of ev.dataTransfer.files) {
           if (this.uploadList.some(e => e.name === file.name)) return;
           if (file.size > this.FILE_SIZE_LIMIT) {
@@ -95,6 +112,10 @@
             this.uploadList.push(file);
           } else {
             this.fileReader(file, (data => {
+              if (this.uploadList.length >= this.limitFiles) {
+                alert(`当前最多只能上传${this.limitFiles}个文件`);
+                return;
+              }
               this.previewList.push({data, isUploaded: false});
               this.uploadList.push(file);
             }));
@@ -115,7 +136,10 @@
           let formData = new FormData();
           formData.append('file', e);
           let xhr = new XMLHttpRequest();
-          xhr.open('post', this.url, true);
+          xhr.open(this.method, this.url, true);
+          for (let key in this.headers) {
+            xhr.setRequestHeader(key, this.headers[key]);
+          }
           xhr.onload = () => {
             if (xhr.status >= 200 && xhr.status < 207) {
               this.previewList[success].isUploaded = true;
@@ -132,10 +156,10 @@
         });
       },
       handleDragEnter(ev) {
-        this.$emit('dragenter');
+        this.$emit('onDragenter', ev);
       },
       handleDragLeave(ev) {
-        this.$emit('dragleave');
+        this.$emit('onDragleave', ev);
       },
       fileSize(size) {
         if (size / 1024 / 1024 < 1) {
@@ -144,17 +168,16 @@
           return (size / 1024 / 1024).toFixed(2) + 'MB';
         }
       }
-    },
-    mounted() {
-      document.addEventListener('drop', (ev) => {
-        ev.preventDefault();
-      });
     }
   };
 </script>
 
 <style lang="scss" rel="stylesheet/scss" scoped>
     @import url('./css/reset.css');
+
+    *, *::after, *::before {
+        box-sizing: border-box;
+    }
 
     .dropzone-wrapper {
         position: relative;
@@ -167,6 +190,10 @@
         transition: .5s;
         background-color: #fff;
         cursor: pointer;
+        font-family: 'Avenir', "PingFang SC", "Microsoft YaHei", Helvetica, "宋体", sans-serif;
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+        text-align: center;
         &:hover {
             background-color: #e8fffd;
         }
